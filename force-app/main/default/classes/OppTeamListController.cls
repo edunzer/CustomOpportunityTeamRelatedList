@@ -21,4 +21,9 @@ public with sharing class OppTeamListController {
     public static void deleteTeamMember(Id teamMemberId) {
         delete [SELECT Id FROM OpportunityTeamMember WHERE Id = :teamMemberId];
     }
+    @AuraEnabled(cacheable=true)
+    public static Boolean hasCreatePermissionOnOpportunity() {
+        return Schema.sObjectType.Opportunity.isCreateable();
+    }
+
 }

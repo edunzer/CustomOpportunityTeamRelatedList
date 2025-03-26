@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import getTeamMembers from '@salesforce/apex/OppTeamListController.getTeamMembers';
 import addTeamMember from '@salesforce/apex/OppTeamListController.addTeamMember';
 import deleteTeamMember from '@salesforce/apex/OppTeamListController.deleteTeamMember';
+import hasCreatePermissionOnOpportunity from '@salesforce/apex/OppTeamListController.hasCreatePermissionOnOpportunity';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
@@ -11,19 +12,31 @@ export default class OppTeamList extends LightningElement {
     teamMembers = [];
     error;
 
+    @track hasCreatePermission = false;
+
     @track isModalOpen = false;
     selectedUserId;
     teamMemberRole;
 
     columns = [
         { label: 'Team Member', fieldName: 'userName', type: 'text' },
-        { label: 'Member Role', fieldName: 'TeamMemberRole', type: 'text' },
-        {
-            type: 'action',
-            typeAttributes: { rowActions: [{ label: 'Delete', name: 'delete' }] }
-        }
+        { label: 'Member Role', fieldName: 'TeamMemberRole', type: 'text' }
     ];
-    
+
+    connectedCallback() {
+        hasCreatePermissionOnOpportunity().then(permission => {
+            this.hasCreatePermission = permission;
+            if (this.hasCreatePermission) {
+                this.columns = [
+                    ...this.columns,
+                    {
+                        type: 'action',
+                        typeAttributes: { rowActions: [{ label: 'Delete', name: 'delete' }] }
+                    }
+                ];
+            }
+        });
+    }
 
     @wire(getTeamMembers, { opportunityId: '$recordId' })
     wiredTeamMembers(result) {
