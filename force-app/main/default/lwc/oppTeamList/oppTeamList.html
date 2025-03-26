@@ -1,5 +1,8 @@
 <template>
     <lightning-card title="Opportunity Team" icon-name="standard:team_member">
+        <div slot="actions">
+            <lightning-button label="Add Team Member" onclick={handleAddClick} variant="neutral "></lightning-button>
+        </div>
         <template if:true={teamMembers.length}>
             <lightning-datatable
                 key-field="Id"
