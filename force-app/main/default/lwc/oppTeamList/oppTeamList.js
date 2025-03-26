@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import getTeamMembers from '@salesforce/apex/OppTeamListController.getTeamMembers';
 import addTeamMember from '@salesforce/apex/OppTeamListController.addTeamMember';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
 
 export default class OppTeamList extends LightningElement {
     @api recordId;
@@ -18,7 +19,9 @@ export default class OppTeamList extends LightningElement {
     ];
 
     @wire(getTeamMembers, { opportunityId: '$recordId' })
-    wiredTeamMembers({ data, error }) {
+    wiredTeamMembers(result) {
+        this.wiredResult = result;
+        const { data, error } = result;
         if (data) {
             this.teamMembers = data.map(member => ({
                 ...member,
@@ -70,14 +73,19 @@ export default class OppTeamList extends LightningElement {
                 message: 'Team Member added successfully.',
                 variant: 'success'
             }));
+
             this.isModalOpen = false;
-            return refreshApex(this.wiredTeamMembers);
+            this.selectedUserId = undefined;
+            this.teamMemberRole = '';
+            await refreshApex(this.wiredResult);
+
         } catch (err) {
+            const message = err?.body?.message || err?.message || 'An unknown error occurred.';
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Error adding team member',
-                message: err.body.message,
+                message: message,
                 variant: 'error'
             }));
-        }
+        }        
     }
 }
