@@ -1,6 +1,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import getTeamMembers from '@salesforce/apex/OppTeamListController.getTeamMembers';
 import addTeamMember from '@salesforce/apex/OppTeamListController.addTeamMember';
+import deleteTeamMember from '@salesforce/apex/OppTeamListController.deleteTeamMember';
+
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 
@@ -15,8 +17,13 @@ export default class OppTeamList extends LightningElement {
 
     columns = [
         { label: 'Team Member', fieldName: 'userName', type: 'text' },
-        { label: 'Member Role', fieldName: 'TeamMemberRole', type: 'text' }
+        { label: 'Member Role', fieldName: 'TeamMemberRole', type: 'text' },
+        {
+            type: 'action',
+            typeAttributes: { rowActions: [{ label: 'Delete', name: 'delete' }] }
+        }
     ];
+    
 
     @wire(getTeamMembers, { opportunityId: '$recordId' })
     wiredTeamMembers(result) {
@@ -33,6 +40,15 @@ export default class OppTeamList extends LightningElement {
             this.teamMembers = [];
         }
     }
+
+    handleRowAction(event) {
+        const actionName = event.detail.action.name;
+        const row = event.detail.row;
+    
+        if (actionName === 'delete') {
+            this.handleDelete(row.Id);
+        }
+    }    
 
     handleAddClick() {
         this.isModalOpen = true;
@@ -88,4 +104,24 @@ export default class OppTeamList extends LightningElement {
             }));
         }        
     }
+
+    async handleDelete(teamMemberId) {
+        try {
+            await deleteTeamMember({ teamMemberId });
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Success',
+                message: 'Team Member deleted successfully.',
+                variant: 'success'
+            }));
+            await refreshApex(this.wiredResult);
+        } catch (err) {
+            const message = err?.body?.message || err?.message || 'An unknown error occurred.';
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error deleting team member',
+                message: message,
+                variant: 'error'
+            }));
+        }
+    }
+    
 }
