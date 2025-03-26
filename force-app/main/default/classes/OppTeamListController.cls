@@ -17,4 +17,8 @@ public with sharing class OppTeamListController {
         );
         insert newMember;
     }
+    @AuraEnabled
+    public static void deleteTeamMember(Id teamMemberId) {
+        delete [SELECT Id FROM OpportunityTeamMember WHERE Id = :teamMemberId];
+    }
 }
