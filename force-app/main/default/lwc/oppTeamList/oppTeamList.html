@@ -4,8 +4,10 @@
             <lightning-datatable
                 key-field="Id"
                 data={teamMembers}
-                columns={columns}>
-            </lightning-datatable>
+                columns={columns}
+                hide-checkbox-column
+                show-row-number-column>
+            </lightning-datatable>        
         </template>
         <template if:false={teamMembers.length}>
             <p class="slds-p-around_medium">No team members found.</p>
