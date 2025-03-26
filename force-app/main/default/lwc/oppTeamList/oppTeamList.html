@@ -10,7 +10,8 @@
                 columns={columns}
                 hide-checkbox-column
                 show-row-number-column
-                onrowaction={handleRowAction}>
+                onrowaction={handleRowAction}
+                class="scrollable-table">
             </lightning-datatable>
         </template>
         <template if:false={teamMembers.length}>
