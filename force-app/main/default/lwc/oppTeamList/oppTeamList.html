@@ -9,8 +9,9 @@
                 data={teamMembers}
                 columns={columns}
                 hide-checkbox-column
-                show-row-number-column>
-            </lightning-datatable>        
+                show-row-number-column
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
         </template>
         <template if:false={teamMembers.length}>
             <p class="slds-p-around_medium">No team members found.</p>
