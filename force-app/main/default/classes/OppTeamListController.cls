@@ -8,4 +8,13 @@ public with sharing class OppTeamListController {
             ORDER BY User.Name ASC
         ];
     }
+    @AuraEnabled
+    public static void addTeamMember(Id opportunityId, Id userId, String teamMemberRole) {
+        OpportunityTeamMember newMember = new OpportunityTeamMember(
+            OpportunityId = opportunityId,
+            UserId = userId,
+            TeamMemberRole = teamMemberRole
+        );
+        insert newMember;
+    }
 }
