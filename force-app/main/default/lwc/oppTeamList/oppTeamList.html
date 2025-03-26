@@ -40,8 +40,10 @@
                     </lightning-record-edit-form>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning-button label="Cancel" onclick={handleModalCancel}></lightning-button>
-                    <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
+                    <lightning-button-group>
+                        <lightning-button label="Cancel" onclick={handleModalCancel}></lightning-button>
+                        <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button>
+                    </lightning-button-group>
                 </footer>
             </div>
         </section>
