@@ -56,4 +56,10 @@ private class OppTeamListControllerTest {
         Boolean result = OppTeamListController.hasCreatePermissionOnOpportunity();
         System.assertEquals(true, result); // Should reflect actual org permission
     }
+
+    @isTest
+    static void testHasDeletePermissionOnOpportunity() {
+        Boolean result = OppTeamListController.hasDeletePermissionOnOpportunity();
+        System.assertEquals(true, result); // Should reflect actual org permission
+    }
 }
