@@ -63,7 +63,16 @@ public with sharing class OppTeamListController {
         try {
             return Schema.sObjectType.Opportunity.isCreateable();
         } catch (Exception ex) {
-            throw new AuraHandledException('Error checking permissions: ' + ex.getMessage());
+            throw new AuraHandledException('Error checking Create permissions: ' + ex.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Boolean hasDeletePermissionOnOpportunity() {
+        try {
+            return Schema.sObjectType.Opportunity.isDeletable();
+        } catch (Exception ex) {
+            throw new AuraHandledException('Error checking Delete permissions: ' + ex.getMessage());
         }
     }
 }

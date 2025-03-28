@@ -3,6 +3,7 @@ import getTeamMembers from '@salesforce/apex/OppTeamListController.getTeamMember
 import addTeamMember from '@salesforce/apex/OppTeamListController.addTeamMember';
 import deleteTeamMember from '@salesforce/apex/OppTeamListController.deleteTeamMember';
 import hasCreatePermissionOnOpportunity from '@salesforce/apex/OppTeamListController.hasCreatePermissionOnOpportunity';
+import hasDeletePermissionOnOpportunity from '@salesforce/apex/OppTeamListController.hasDeletePermissionOnOpportunity';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
@@ -26,15 +27,19 @@ export default class OppTeamList extends LightningElement {
     connectedCallback() {
         hasCreatePermissionOnOpportunity().then(permission => {
             this.hasCreatePermission = permission;
-            if (this.hasCreatePermission) {
-                this.columns = [
-                    ...this.columns,
-                    {
-                        type: 'action',
-                        typeAttributes: { rowActions: [{ label: 'Delete', name: 'delete' }] }
-                    }
-                ];
-            }
+
+            hasDeletePermissionOnOpportunity().then(canDelete => {
+                if (this.hasCreatePermission && canDelete) {
+                    this.columns = [
+                        ...this.columns,
+                        {
+                            type: 'action',
+                            typeAttributes: { rowActions: [{ label: 'Delete', name: 'delete' }] 
+                            }
+                        }
+                    ];
+                }
+            });
         });
     }
 
