@@ -1,4 +1,4 @@
-public with sharing class OppTeamListController {
+public without sharing class OppTeamListController {
     
     @AuraEnabled(cacheable=true)
     public static List<OpportunityTeamMember> getTeamMembers(Id opportunityId) {
