@@ -49,7 +49,19 @@ private class OppTeamListControllerTest {
             exceptionThrown = true;
         }
         System.assert(exceptionThrown, 'Expected AuraHandledException to be thrown');
-    }    
+    } 
+    
+    @isTest
+    static void testDeleteTeamMember_WithInvalidId() {
+        Boolean exceptionThrown = false;
+        try {
+            Id fakeTeamMemberId = '00k000000000001';
+            OppTeamListController.deleteTeamMember(fakeTeamMemberId);
+        } catch (AuraHandledException ex) {
+            exceptionThrown = true;
+        }
+        System.assert(exceptionThrown, 'Expected AuraHandledException to be thrown');
+    }
     
     @isTest
     static void testHasCreatePermissionOnOpportunity() {
