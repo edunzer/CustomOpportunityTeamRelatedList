@@ -7,7 +7,7 @@ public without sharing class OppTeamListController {
                 throw new AuraHandledException('Opportunity Id must not be null.');
             }
             return [
-                SELECT Id, UserId, User.Name, TeamMemberRole
+                SELECT Id, UserId, User.Name, User.CompanyName, TeamMemberRole
                 FROM OpportunityTeamMember
                 WHERE OpportunityId = :opportunityId
                 ORDER BY User.Name ASC
