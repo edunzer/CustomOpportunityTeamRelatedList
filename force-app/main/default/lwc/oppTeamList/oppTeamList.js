@@ -51,6 +51,8 @@ export default class OppTeamList extends LightningElement {
             this.teamMembers = data.map(member => ({
                 ...member,
                 userName: member.User?.Name
+                    ? `${member.User.Name}${member.User.Company ? ' (' + member.User.Company + ')' : ''}`
+                    : ''
             }));
             this.error = undefined;
         } else if (error) {
