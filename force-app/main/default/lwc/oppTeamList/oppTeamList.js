@@ -62,6 +62,14 @@ export default class OppTeamList extends LightningElement {
       }));
       this.teamMembers = this.allTeamMembers.slice(0, PAGE_SIZE);
       this.error = undefined;
+      if (this.allTeamMembers.length <= PAGE_SIZE) {
+        Promise.resolve().then(() => {
+          const datatable = this.template.querySelector("lightning-datatable");
+          if (datatable) {
+            datatable.enableInfiniteLoading = false;
+          }
+        });
+      }
     } else if (error) {
       this.error = error;
       this.teamMembers = [];
@@ -78,7 +86,13 @@ export default class OppTeamList extends LightningElement {
     target.isLoading = true;
     const nextPage = this.teamMembers.length + PAGE_SIZE;
     this.teamMembers = this.allTeamMembers.slice(0, nextPage);
-    target.isLoading = false;
+    // Reset loading state after the rendering cycle completes
+    Promise.resolve().then(() => {
+      target.isLoading = false;
+      if (this.teamMembers.length >= this.allTeamMembers.length) {
+        target.enableInfiniteLoading = false;
+      }
+    });
   }
 
   handleRowAction(event) {
